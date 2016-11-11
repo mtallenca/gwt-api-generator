@@ -1,0 +1,28 @@
+<dom-module id="message-dialog"> 
+   <template>
+      <style include="site-styles"></style>
+	   <style>
+	   .message {
+	      margin-bottom: 10px;
+	      font-size: 16px;
+	   }
+	   </style>
+	
+	   <paper-dialog id="dialog" modal="false" withBackdrop="true" on-opened-changed="dialog_open_toggle">
+	      <div class="message">[[message]]</div>
+	      <div class="buttons">
+	         <paper-button on-tap="close" autofocus="true" class="default-button" 
+	            raised="true">OK</paper-button>
+	      </div>
+	   </paper-dialog>
+   </template> 
+   <script>
+      Polymer({is:"message-dialog",
+    	   created: function() {
+	          if (window.customDomModules && window.customDomModules[this.is]) {
+	             window.customDomModules[this.is].domModuleCreated(this);              
+	          }
+	       }
+	   });
+   </script> 
+</dom-module>

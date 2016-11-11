@@ -1,0 +1,51 @@
+<dom-module id="site-styles">
+  <template>
+    <style include="iron-flex"></style>
+    <style include="iron-flex-reverse"></style>
+    <style include="iron-flex-alignment"></style>
+    <style include="iron-flex-factors"></style>
+    <style include="iron-positioning"></style>
+    <style>
+			.default-button {
+			   background: #4285f4;
+			   color: #fff;
+			}
+			
+			.center-buttons {
+			    @apply(--layout-horizontal);
+			    @apply(--layout-center-justified);
+				margin-bottom: 20px;
+			}
+			
+			.hidden {
+			   display: none;
+			}
+			
+			.horizontal-section-container {
+			    @apply(--layout-horizontal);
+			    @apply(--layout-center-justified);
+			    @apply(--layout-wrap);
+			}
+			  
+		  .vertical-section-container {
+		    @apply(--layout-vertical);
+		    @apply(--center-justified);
+		  }
+		  			  
+		  .horizontal-section {
+		    background-color: white;
+		    padding: 24px;
+		    margin-right: 24px;
+		    min-width: 200px;
+		    @apply(--shadow-elevation-2dp);
+		  }
+		  
+		  .vertical-section {
+		    background-color: white;
+		    padding: 24px;
+		    margin: 0 24px 24px 24px;
+		    @apply(--shadow-elevation-2dp);
+		  }
+    </style>
+  </template>
+</dom-module>
