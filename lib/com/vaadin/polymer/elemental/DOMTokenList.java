@@ -10,10 +10,10 @@ public interface DOMTokenList {
     @JsProperty
     int getLength();
 
-    boolean contains();
+    boolean contains(String s);
 
     void add(String token);
-
+ 
     void remove(String token);
 
     void replace(String token, String replacement);

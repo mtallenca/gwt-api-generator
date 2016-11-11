@@ -5,19 +5,16 @@ import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
 
 @JsType(isNative=true, namespace=GLOBAL)
-public interface Node extends EventTarget {
+public interface KeyEvent extends Event {
+    @JsProperty
+    int getKeyCode();
 
     @JsProperty
-    NodeList getChildNodes();
+    boolean getShiftKey();
 
     @JsProperty
-    Node getFirstChild();
+    boolean getCtrlKey();
 
     @JsProperty
-    Node getLastChild();
-
-    boolean hasChildNodes();
-
-    void appendChild(Object child);
-    void removeChild(Object child);
+    boolean getAltKey();
 }
