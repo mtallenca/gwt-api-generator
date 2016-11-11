@@ -28,7 +28,6 @@ global.parsed = []; // we store all parsed objects so as we can iterate or find 
 
 gulp.task('clean:target', function() {
   fs.removeSync(globalVar.clientDir + 'element');
-  fs.removeSync(globalVar.clientDir + 'widget');
 });
 
 gulp.task('clean:resources', function() {
@@ -207,29 +206,6 @@ gulp.task('generate:events', ['parse'], function() {
    });
 });
 
-gulp.task('generate:widgets', ['parse'], function() {
-  return StreamFromArray(global.parsed,{objectMode: true})
-   .on('data', function(item) {
-      if (!helpers.isBehavior(item)) {
-        parseTemplate('Widget', item, item.is, 'widget/', '');
-      }
-   });
-});
-
-gulp.task('generate:widget-events', ['parse'], function() {
-  return StreamFromArray(global.parsed,{objectMode: true})
-   .on('data', function(item) {
-      if (item.events) {
-        item.events.forEach(function(event) {
-          event.bowerData = item.bowerData;
-          event.name = event.name.replace(/\s.*$/,'');
-          parseTemplate('WidgetEvent', event, event.name, 'widget/event/', 'Event');
-          parseTemplate('WidgetEventHandler', event, event.name, 'widget/event/', 'EventHandler');
-        });
-      }
-   });
-});
-
 gulp.task('generate:gwt-module', function() {
   if (!args.excludeLib) {
     return gulp.src(tplDir + "GwtModule.template")
@@ -246,9 +222,7 @@ gulp.task('copy:static-gwt-module', function() {
 
 gulp.task('generate:elements-all', ['generate:elements', 'generate:events']);
 
-gulp.task('generate:widgets-all', ['generate:widgets', 'generate:widget-events']);
-
-gulp.task('generate', ['generate:elements-all', 'generate:widgets-all', 'generate:gwt-module'], function() {
+gulp.task('generate', ['generate:elements-all', 'generate:gwt-module'], function() {
   gutil.log('Done.');
 });
 

@@ -4,15 +4,18 @@ package <%= ns %>;
 import com.vaadin.polymer.elemental.*;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.dom.client.Element;
 import jsinterop.annotations.JsOverlay;
-import jsinterop.annotations.JsProperty;
-import jsinterop.annotations.JsType;
 
 /**
  * <%= getDescription(' ') %>
  */
-@JsType(isNative=true)
-public interface <%= elementClassName() %> extends <%= base ? base : 'HTMLElement' %> {
+<% if (elementClassName() == "BaseElement") { %>
+public class <%= elementClassName() %> extends <%= base ? base : 'Element' %> {
+<% } else { %>
+public class <%= elementClassName() %> extends <%= base ? base : 'HTMLElement' %> {
+<% } %>
+    protected <%= elementClassName() %>() {}
 
     @JsOverlay public static final String TAG = "<%= name %>";
     @JsOverlay public static final String SRC = "<%= path %>";
@@ -26,7 +29,22 @@ public interface <%= elementClassName() %> extends <%= base ? base : 'HTMLElemen
      * @type <%= item.type %>
      * <%= item.isBehavior ? ('@behavior ' + item.behavior ) : ''%>
      */
-    @JsProperty <%= computeType(item.type) %> <%= item.getter %>();
+<% var name = 'this.' + item.name;
+   if (item.name == "for" || item.name == "if") {
+        name = 'this["' + item.name + '"]'
+   }
+   if (item.setters.length > 1) {
+      for (i = 0;i < item.setters.length; i++) {
+         if (item.javaParams[i] == "double") { %>
+    public final native double <%= item.getter %>AsDouble() /*-{ return <%= name %>; }-*/;
+    public final native int <%= item.getter %>AsInt() /*-{ return <%= name %>; }-*/;
+<%       } else { %>
+    public final native <%= item.javaParams[i] %> <%= item.getter %>As<%= capitalizeFirstLetter(item.javaParams[i]) %>() /*-{ return <%= name %>; }-*/;
+<%       }
+      }
+   } else { %>
+    public final native <%= computeType(item.type) %> <%= item.getter %>() /*-{ return <%= name %>; }-*/;
+<% } %>
     /**
      * <%= getDescription('     ', item) %>
      *
@@ -35,7 +53,9 @@ public interface <%= elementClassName() %> extends <%= base ? base : 'HTMLElemen
      * @type <%= item.type %>
      * <%= item.isBehavior ? ('@behavior ' + item.behavior ) : ''%>
      */
-    @JsProperty void <%= item.setter %>;
+<% for (i = 0;i < item.setters.length; i++) { %>
+    public final native void <%= item.setters[i] %>(<%= item.javaParams[i] %> value) /*-{ <%= name %> = value; }-*/;
+<% } %>
 <% }); %>
 <% _.forEach(getMethods(properties), function(item) { %>
     /**
@@ -47,6 +67,8 @@ public interface <%= elementClassName() %> extends <%= base ? base : 'HTMLElemen
      * <%= item.isBehavior ? ('@behavior ' + item.behavior ) : ''%>
      * <%= item.return && item.return.type ? '@return {' + returnString(item) + '}' : ''%>
      */
-    <%= returnString(item) %> <%= item.method %>;
+<% for (i = 0;i < item.methods.length; i++) { %>
+    public final native <%= returnString(item) %> <%= item.methods[i] %>(<%= item.javaParams[i] %>) /*-{ return this.<%= item.methods[i] %>(<%= item.jsParams[i] %>); }-*/;
+<% } %>
 <% }); %>
 }

@@ -30,8 +30,10 @@ public abstract class Polymer {
     public static Base Base;
     private static boolean hasHtmlImports = htmlImportsSupported();
 
+    /*
     @JsProperty(namespace = JsPackage.GLOBAL)
     public static String performance;
+    */
 
     /**
      * Set the location of the bower_components for the application.
@@ -375,10 +377,10 @@ public abstract class Polymer {
 
     /**
      * Returns the JsInterop instance of Document
-     */
     public static com.vaadin.polymer.elemental.Document getDocument() {
         return (com.vaadin.polymer.elemental.Document)Document.get();
     }
+     */
 
     /**
      * Return true if the element is already registered.

@@ -106,13 +106,14 @@ module.exports = {
     // TODO: Sometimes type have a syntax like: (number|string)
     // We should be able to overload those methods instead of using
     // Object, but JsInterop does not support well overloading
+    t = t.replace("(", "");
     if (/.*\|.*/.test(t)) return 'Object';
     if (/^string/i.test(t)) return 'String';
     if (/^boolean/i.test(t)) return 'boolean';
-    if (/^array/i.test(t)) return 'JsArray';
+    if (/^array/i.test(t)) return 'JsArray<?>';
     if (/^element/i.test(t)) return 'Element';
     if (/^number/i.test(t)) return 'double';
-    if (/^function/i.test(t)) return 'Function';
+    if (/^function/i.test(t)) return 'Function<?,?>';
     if (this.findBehavior(t)) {
       return this.camelCase(t);
     }
@@ -120,7 +121,7 @@ module.exports = {
       return this.camelCase(t) + 'Element';
     }
 
-    return "JavaScriptObject";
+    return "Object";
   },
   sortProperties: function(properties) {
   },
@@ -155,12 +156,22 @@ module.exports = {
         item = cache[item.name] ? cache[item.name] : item;
 
         item.getter = item.getter || this.computeGetterWithPrefix(item);
-        item.setter = item.setter || (this.computeSetterWithPrefix(item) + '(' + this.computeType(item.type) + ' value)');
+        item.setters = []
+        item.javaParams = []
+        var types = item.type.split("|");
+        for (i = 0; i < types.length; i++) {
+            setter = this.computeSetterWithPrefix(item) + '(' + this.computeType(types[i]) + ' value)';
 
-        // JsInterop does not support a property with two signatures
-        if (!done[item.getter]) {
-          ret.push(item);
-          done[item.getter] = true;
+            if (i > 0) {
+                item.setters.push(this.computeSetterWithPrefix(item));
+                item.javaParams.push(this.computeType(types[i]));
+            }
+            else if (!done[item.getter]) {
+                item.setters.push(this.computeSetterWithPrefix(item));
+                item.javaParams.push(this.computeType(types[i]));
+                ret.push(item);
+                done[item.getter] = true;
+            }
         }
       } else {
         cache[item.name] = item;
@@ -209,14 +220,45 @@ module.exports = {
     var done = {};
     _.forEach(properties, function(item) {
       if (!gsetters[item.name] && !item.getter && !item.private && !item.published && /function/i.test(item.type)) {
-        item.method = item.method || item.name + '(' + this.typedParamsString(item) + ')';
-        // JsInterop + SDM do not support method overloading if one signature is object
-        var other = item.method.replace(/String/, 'Object');
-        var signature = this.computeSignature(item.method);
-        var other_sig = this.computeSignature(other);
-        if (!gsetters[signature] && !done[signature] && !done[other_sig]) {
-          ret.push(item);
-          done[signature] = true;
+        item.methods = [];
+        item.javaParams = [];
+        item.jsParams = [];
+        if (item.params && item.params.length == 1 && item.params[0].type && item.params[0].type.indexOf("|") > 0) {
+            // single value function but is overloaded
+            var types = item.params[0].type.replace("(", "").replace(")","").split("|");
+            var pushed = false;
+            for (i = 0; i < types.length; i++) {
+                method = item.name + '(' + this.computeType(types[i]) + ' ' + this.computeMethodName(item.params[0].name) + ')';
+
+                var other_sig = this.computeSignature(method.replace(/String/, 'Object'));
+                var signature = this.computeSignature(method);
+                if (!gsetters[signature] && !done[signature] && !done[other_sig]) {
+                   item.methods.push(item.name);
+                   var paramName = this.computeMethodName(item.params[0].name);
+                   item.javaParams.push(this.computeType(types[i]) + ' ' + paramName);
+                   item.jsParams.push(paramName);
+                   done[signature] = true;
+                   if (!pushed) {
+                     ret.push(item);
+                     pushed = true;
+                   }
+                }
+            }
+        }
+        else {
+            item.methods.push(item.name);
+            item.javaParams.push(this.typedParamsString(item));
+            item.jsParams.push(this.paramsString(item));
+
+            // JsInterop + SDM do not support method overloading if one signature is object
+            method = item.name + '(' + this.typedParamsString(item) + ')';
+            var other = method.replace(/String/, 'Object');
+            var signature = this.computeSignature(method);
+            var other_sig = this.computeSignature(other);
+            if (!gsetters[signature] && !done[signature] && !done[other_sig]) {
+               ret.push(item);
+               done[signature] = true;
+            }
         }
       }
     }.bind(this));
@@ -246,10 +288,7 @@ module.exports = {
   },
   computeGetterWithPrefix: function(item) {
     var name = item.name.replace(/^detail\./,'');
-    // replaced isXXX methods with getXXX temporary because of bug in JsInterop
-    // because in the case of isNarrow, the JS generated is something like $object.arrow
-    //var prefix = /^boolean/i.test(item.type) ? 'is' : 'get';
-    var prefix = 'get';
+    var prefix = /^boolean/i.test(item.type) ? 'is' : 'get';
     if (this.startsWith(name, prefix)) {
       return name;
     } else {
