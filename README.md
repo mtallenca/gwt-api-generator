@@ -1,3 +1,14 @@
+# gwt-api-generator changes in this fork
+
+- No widgets
+- Polymer Elements are JavaScriptObjects extending com.google.gwt.dom.client.Element 
+- All custom dom-modules can be mapped to com.vaadin.polymer.DomModule
+- All custom dom-moudle supporting code is placed in the DomModule class with @JsMethod and _ prefix
+- Example eclipse project in gwt-polymer-demo
+- Compiled demo site visible at https://s3.amazonaws.com/gwt-polymer-demo/index.html
+- Demo site is based on Polymer 1.7 and shows iron-list, paper-dialog w/data binding and shared dom-module css 
+- Demo site has all UI in dom-modules and all code in Java classes
+
 # Vaadin gwt-api-generator
 
 Vaadin gwt-api-generator is a tool that produces GWT Java APIs for JavaScript libraries provided as input, assuming their APIs are decorated with JSDoc annotations.
