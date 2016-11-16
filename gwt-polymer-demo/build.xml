@@ -47,12 +47,9 @@
 
   <target name="clean" description="Cleans this project">
     <delete dir="war/WEB-INF/classes" failonerror="false" />
+    <delete dir="war/WEB-INF/deploy" failonerror="false" />
+    <delete dir="war/gwt_polymer_demo" failonerror="false" />
     <delete dir="gwt-unitCache" failonerror="false" />
-    <delete includeemptydirs="true">
-        <fileset dir="war" defaultexcludes="false">
-            <include name="gwt_polmer*/" />
-        </fileset>
-    </delete>
   </target>
 
 </project>
