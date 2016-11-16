@@ -2,6 +2,7 @@ package com.vaadin.polymer;
 
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Document;
@@ -76,6 +77,32 @@ public abstract class DomModule {
 		domModuleElement.setHidden(hidden);
 	}	
 
+	public static void init(String importsFile) {
+	    init(GWT.getModuleBaseURL(), importsFile);
+	}
+	
+	private static native void init(String moduleBaseURL, String importsFile) /*-{
+      (function() {
+          if ('registerElement' in $doc
+              && 'import' in $doc.createElement('link')
+              && 'content' in $doc.createElement('template')) {
+            // platform is good!
+          } else {
+            // polyfill the platform!
+            var e = $doc.createElement('script');
+            e.src = moduleBaseURL + 'bower_components/webcomponentsjs/webcomponents-lite.min.js';
+            $doc.body.appendChild(e);
+          }
+          
+          if (importsFile) {
+              var l = $doc.createElement('link');
+              l.rel = 'import';
+              l.href = importsFile;
+              $doc.head.appendChild(l);
+          }
+        })();
+    }-*/;
+	   
 	/**
 	 * Box a native JS array in a Java List. It does not have any performance
 	 * penalty because we directly set the native array of the super ArrayList

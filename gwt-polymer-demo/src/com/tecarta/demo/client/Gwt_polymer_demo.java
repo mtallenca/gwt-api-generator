@@ -15,6 +15,8 @@ public class Gwt_polymer_demo implements EntryPoint {
     final int MAX_WAIT = 5000;
 
     public void onModuleLoad() {
+        DomModule.init("imports.html");
+        
         loading = new Timer() {
             public void run() {
                 if (polymerLoaded()) {
