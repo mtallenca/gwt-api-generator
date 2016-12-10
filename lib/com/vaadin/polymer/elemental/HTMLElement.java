@@ -18,6 +18,7 @@ public class HTMLElement extends Element {
     public final native void setHidden(boolean value) /*-{ this.hidden = value; }-*/;
     public final native boolean isHidden() /*-{ return this.hidden; }-*/;
     public final native void addEventListener(String event, EventListener<?> listener) /*-{ this.addEventListener(event, listener); }-*/; 
+    public final native void removeEventListener(String event, EventListener<?> listener) /*-{ this.removeEventListener(event, listener); }-*/; 
     public final native DOMTokenList getClassList() /*-{ return this.classList; }-*/;
     public final native Node querySelector(String query) /*-{ return this.querySelector(query); }-*/;
     public final native NodeList querySelectorAll(String query) /*-{ return this.querySelectorAll(query); }-*/;
@@ -101,4 +102,6 @@ public class HTMLElement extends Element {
     public final native String resolveUrl(String url) /*-{ return this.resolveUrl(url); }-*/;
 
 
+    public final native void appendChild(HTMLElement child) /*-{ this.appendChild(child); }-*/;
+    public final native void insertBefore(HTMLElement child, HTMLElement existingChild) /*-{ this.insertBefore(child,existingChild); }-*/;
 }

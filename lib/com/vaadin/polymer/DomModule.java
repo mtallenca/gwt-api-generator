@@ -131,18 +131,50 @@ public abstract class DomModule {
     }-*/;
 	
 	public static void attach(DomModule customElement) {
-		attach(Document.get().getBody(), customElement, false);
+		attach(Document.get().getBody(), customElement, null, false);
 	}
 	
 	public static void attach(DomModule customElement, boolean clearFirst) {
-		attach(Document.get().getBody(), customElement, clearFirst);
+		attach(Document.get().getBody(), customElement, null, clearFirst);
 	}
 
-	public static void attach(Element container, DomModule customElement) {
-		attach(container, customElement, false);
+	public static void attach(Element parent, DomModule customElement) {
+		attach(parent, customElement, null, false);
 	}
-	
+
 	public static void attach(Element parent, DomModule customElement, boolean clearFirst) {
+		attach(parent, customElement, null, clearFirst);
+	}
+
+	public static void attachBefore(Element parent, DomModule customElement, DomModule insertBeforeDomModule) {
+        Element insertBefore = null;
+        if (insertBeforeDomModule != null) {
+		    insertBefore = (Element)insertBeforeDomModule.getDomModuleElement();
+        }
+		attachBefore(parent, customElement, insertBefore);
+	}
+
+	public static void attachBefore(Element parent, DomModule customElement, Element insertBefore) {
+        attach(parent, customElement, insertBefore, false);
+    }
+	
+	public static void attachAfter(Element parent, DomModule customElement, DomModule insertAfterDomModule) {
+        Element insertAfter = null;
+        if (insertAfterDomModule != null) {
+            insertAfter = (Element)insertAfterDomModule.getDomModuleElement();
+        }
+        attachAfter(parent, customElement, insertAfter);
+	}
+
+	public static void attachAfter(Element parent, DomModule customElement, Element insertAfter) {
+	    Element insertBefore = null;
+	    if (insertAfter != null) {
+	        insertBefore = insertAfter.getNextSiblingElement();
+	    }
+        attach(parent, customElement, insertBefore, false);
+    }
+	
+	private static void attach(Element parent, DomModule customElement, Element insertBefore, boolean clearFirst) {
 		HTMLElement e = (HTMLElement)customElement.getDomModuleElement();
 		
 		if (e == null) {
@@ -167,7 +199,12 @@ public abstract class DomModule {
 			}
 		}
 		
-		parent.appendChild(e);
+        if (insertBefore != null) {
+            parent.insertBefore(e, insertBefore);
+        }
+        else {
+		    parent.appendChild(e);
+        }
 	}
 	
 	public static void detach(DomModule customElement) {
