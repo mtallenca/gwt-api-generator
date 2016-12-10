@@ -1,20 +1,10 @@
 package com.vaadin.polymer.elemental;
 
-import static jsinterop.annotations.JsPackage.GLOBAL;
-import jsinterop.annotations.JsProperty;
-import jsinterop.annotations.JsType;
+import com.google.gwt.core.client.JavaScriptObject;
 
-@JsType(isNative=true, namespace=GLOBAL)
-public interface Touch {
-    @JsProperty
-    int getClientX();
-
-    @JsProperty
-    int getClientY();
-
-    @JsProperty
-    int getPageX();
-
-    @JsProperty
-    int getPageY();
+public class Touch extends JavaScriptObject {
+    public final native int getClientX() /*-{ this.clientX; }-*/;
+    public final native int getClientY() /*-{ this.clientY; }-*/;
+    public final native int getPageX() /*-{ this.pageX; }-*/;
+    public final native int getPageY() /*-{ this.pageY; }-*/;
 }
