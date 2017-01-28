@@ -114,6 +114,7 @@ module.exports = {
     if (/^element/i.test(t)) return 'Element';
     if (/^number/i.test(t)) return 'double';
     if (/^function/i.test(t)) return 'Function<?,?>';
+    if (/^htmlelement/i.test(t)) return 'HTMLElement';
     if (this.findBehavior(t)) {
       return this.camelCase(t);
     }
@@ -143,7 +144,14 @@ module.exports = {
 
     _.forEach(properties, function(item) {
       // We consider as properties:
-      if (
+      if (item.type == '') { 
+        item.type = 'HTMLElement'; 
+        item.getter = item.getter || this.computeGetterWithPrefix(item);
+        item.setters = []
+        item.javaParams = []
+        ret.push(item);
+      }
+      else if (
           // Items with the published tag (those defined in the properties section)
           item.published ||
           // Non function items
