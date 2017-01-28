@@ -45,14 +45,6 @@ public class <%= elementClassName() %> extends <%= base ? base : 'HTMLElement' %
    } else { %>
     public final native <%= computeType(item.type) %> <%= item.getter %>() /*-{ return <%= name %>; }-*/;
 <% } %>
-    /**
-     * <%= getDescription('     ', item) %>
-     *
-     * JavaScript Info:
-     * @property <%= item.name %>
-     * @type <%= item.type %>
-     * <%= item.isBehavior ? ('@behavior ' + item.behavior ) : ''%>
-     */
 <% for (i = 0;i < item.setters.length; i++) { %>
     public final native void <%= item.setters[i] %>(<%= item.javaParams[i] %> value) /*-{ <%= name %> = value; }-*/;
 <% } %>
