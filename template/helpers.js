@@ -144,14 +144,7 @@ module.exports = {
 
     _.forEach(properties, function(item) {
       // We consider as properties:
-      if (item.type == '') { 
-        item.type = 'HTMLElement'; 
-        item.getter = item.getter || this.computeGetterWithPrefix(item);
-        item.setters = []
-        item.javaParams = []
-        ret.push(item);
-      }
-      else if (
+      if (
           // Items with the published tag (those defined in the properties section)
           item.published ||
           // Non function items
@@ -181,10 +174,26 @@ module.exports = {
                 done[item.getter] = true;
             }
         }
-      } else {
+      } else { 
         cache[item.name] = item;
       }
     }.bind(this));
+
+    // extend the hack - some get methods don't have setters and aren't include in the above loop - assume HTMLElement
+    _.forEach(properties, function(item) {
+      // We consider as properties:
+      if (!item.type && cache[item.name] && !cache[item.name].setters) { 
+         item.type = 'HTMLElement'; 
+         item.getter = this.computeGetterWithPrefix(item);
+         item.setters = []
+         item.javaParams = []
+         if (!done[item.getter]) {
+            done[item.getter] = true;
+            ret.push(item);
+         }
+      }
+    }.bind(this));
+
     return ret;
   },
   getStringSetters: function(properties) {
