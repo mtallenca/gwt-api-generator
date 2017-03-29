@@ -24,7 +24,7 @@ public class HTMLElement extends Element {
     public final native NodeList querySelectorAll(String query) /*-{ return this.querySelectorAll(query); }-*/;
     public final native void set(String propertyPath, Object value) /*-{ this.set(propertyPath, value); }-*/;
     public final native void setInt(String propertyPath, int value) /*-{ this.set(propertyPath, value); }-*/;
-    public final native Object get(String propertyPath) /*-{ this.get(propertyPath); }-*/;
+    public final native Object get(String propertyPath) /*-{ return this.get(propertyPath); }-*/;
     public final native void fire(String eventName, Object detail) /*-{ this.fire(eventName, detail); }-*/;
     public final native void fire(String eventName) /*-{ this.fire(eventName); }-*/;
 
