@@ -22,11 +22,14 @@ public class HTMLElement extends Element {
     public final native DOMTokenList getClassList() /*-{ return this.classList; }-*/;
     public final native Node querySelector(String query) /*-{ return this.querySelector(query); }-*/;
     public final native NodeList querySelectorAll(String query) /*-{ return this.querySelectorAll(query); }-*/;
-    public final native void set(String propertyPath, Object value) /*-{ this.set(propertyPath, value); }-*/;
-    public final native void setInt(String propertyPath, int value) /*-{ this.set(propertyPath, value); }-*/;
-    public final native Object get(String propertyPath) /*-{ return this.get(propertyPath); }-*/;
     public final native void fire(String eventName, Object detail) /*-{ this.fire(eventName, detail); }-*/;
     public final native void fire(String eventName) /*-{ this.fire(eventName); }-*/;
+
+    public final native Object get(String propertyPath) /*-{ return this.get(propertyPath); }-*/;
+    public final native String getAsString(String propertyPath) /*-{ return "" + this.get(propertyPath); }-*/;
+    public final native int getAsInt(String propertyPath) /*-{ return this.get(propertyPath); }-*/;
+    public final native void set(String propertyPath, Object value) /*-{ this.set(propertyPath, value); }-*/;
+    public final native void set(String propertyPath, int value) /*-{ this.set(propertyPath, value); }-*/;
 
     /**
      * Returns the first node in this element’s local DOM that matches selector.
