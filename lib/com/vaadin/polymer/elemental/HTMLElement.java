@@ -1,5 +1,6 @@
 package com.vaadin.polymer.elemental;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
@@ -25,10 +26,11 @@ public class HTMLElement extends Element {
     public final native void fire(String eventName, Object detail) /*-{ this.fire(eventName, detail); }-*/;
     public final native void fire(String eventName) /*-{ this.fire(eventName); }-*/;
 
-    public final native <T extends JavaScriptObject> T get(String propertyPath) /*-{ return this.get(propertyPath); }-*/;
+    public final native Object get(String propertyPath) /*-{ return this.get(propertyPath); }-*/;
+    public final native <T extends JavaScriptObject> T getAsJavaScriptObject(String propertyPath) /*-{ return this.get(propertyPath); }-*/;
     public final native String getAsString(String propertyPath) /*-{ return "" + this.get(propertyPath); }-*/;
     public final native int getAsInt(String propertyPath) /*-{ return this.get(propertyPath); }-*/;
-    public final native void set(String propertyPath, <T extends JavaScriptObject> T value) /*-{ this.set(propertyPath, value); }-*/;
+    public final native void set(String propertyPath, Object value) /*-{ this.set(propertyPath, value); }-*/;
     public final native void set(String propertyPath, int value) /*-{ this.set(propertyPath, value); }-*/;
 
     /**
