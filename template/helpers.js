@@ -354,7 +354,7 @@ module.exports = {
     if (method['return'] && method['return']['type']) {
       return this.computeType(method['return']['type'])
     }
-    return 'void';
+    return 'JavaScriptObject';
   },
   getDescription: function(spaces, o) {
     o = o || this;

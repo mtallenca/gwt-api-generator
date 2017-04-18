@@ -69,9 +69,23 @@ public abstract class DomModule {
 	protected void domModuleReady() {
 	}
 
-	public Object getDomModuleElement() {
+	public HTMLElement getDomModuleElement() {
 		return domModuleElement;
 	}
+
+    public Object async(Runnable runnable, int delayMillis) {
+        return domModuleElement.async(new Function() {
+            @Override
+            public Object call(Object o) {
+                runnable.run();
+                return null;
+            }
+        }, delayMillis);
+    }
+
+    public void cancelAsync(Object handle) {
+        domModuleElement.cancelAsync(handle);
+    }
 
 	public void setHidden(Boolean hidden) {
 		domModuleElement.setHidden(hidden);
