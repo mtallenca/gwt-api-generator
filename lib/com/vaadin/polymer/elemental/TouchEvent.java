@@ -10,4 +10,6 @@ import jsinterop.annotations.JsType;
 public interface TouchEvent extends Event {
     @JsProperty
     JsArray<Touch> getTouches();
+    @JsProperty
+    JsArray<Touch> getChangedTouches();
 }

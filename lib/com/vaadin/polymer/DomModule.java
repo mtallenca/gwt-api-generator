@@ -9,6 +9,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.vaadin.polymer.elemental.Function;
 import com.vaadin.polymer.elemental.HTMLElement;
 
 import jsinterop.annotations.JsMethod;
@@ -26,7 +27,7 @@ public abstract class DomModule {
 		domModuleReady();		
 	}
 
-	native void saveInitData(String tagName) /*-{
+	protected native void saveInitData(String tagName) /*-{
 		if (!$wnd.customDomModules) {
 			$wnd.customDomModules = {};
 		}
@@ -34,7 +35,7 @@ public abstract class DomModule {
 		$wnd.customDomModules[tagName] = this;
 	}-*/;
 
-	native void clearInitData(String tagName) /*-{
+	protected native void clearInitData(String tagName) /*-{
 		if ($wnd.customDomModules) {
 			delete $wnd.customDomModules[tagName];
 		}

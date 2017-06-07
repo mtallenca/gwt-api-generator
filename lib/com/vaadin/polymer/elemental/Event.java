@@ -32,4 +32,5 @@ public interface Event {
     }
 
     void stopPropagation();
+    void stopImmediatePropagation();
 }
