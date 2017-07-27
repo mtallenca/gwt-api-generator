@@ -29,6 +29,8 @@ public interface Event {
     
     @JsType(isNative=true)
     public interface Detail {
+        @JsProperty
+        String getValue();
     }
 
     void stopPropagation();
