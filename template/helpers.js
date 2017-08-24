@@ -351,9 +351,14 @@ module.exports = {
     return result.join(', ');
   },
   returnString: function(method) {
+    if (method['name'] && method['name'] == 'modelForElement') {
+      return "Model";
+    }
+
     if (method['return'] && method['return']['type']) {
       return this.computeType(method['return']['type'])
     }
+
     return 'JavaScriptObject';
   },
   getDescription: function(spaces, o) {

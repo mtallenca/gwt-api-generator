@@ -20,11 +20,10 @@ public abstract class DomModule {
 	public DomModule() {
 	}
 
-	protected void load(String tagName) {
+	protected void create(String tagName) {
 		saveInitData(tagName);
 		this.domModuleElement = (HTMLElement) Document.get().createElement(tagName);
 		clearInitData(tagName);
-		domModuleReady();		
 	}
 
 	protected native void saveInitData(String tagName) /*-{
@@ -66,6 +65,11 @@ public abstract class DomModule {
 			}
 		});
 	}-*/;
+
+    @JsMethod
+    void ready() {
+        domModuleReady();
+    }
 
 	protected void domModuleReady() {
 	}

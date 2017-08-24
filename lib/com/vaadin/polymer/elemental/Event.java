@@ -2,8 +2,6 @@ package com.vaadin.polymer.elemental;
 
 import static jsinterop.annotations.JsPackage.GLOBAL;
 
-import com.google.gwt.dom.client.Element;
-
 import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
 
@@ -22,10 +20,10 @@ public interface Event {
     Detail getDetail();
 
     @JsProperty
-    Element getTarget();
+    HTMLElement getTarget();
 
     @JsProperty
-    Element getCurrentTarget();
+    HTMLElement getCurrentTarget();
     
     @JsType(isNative=true)
     public interface Detail {
