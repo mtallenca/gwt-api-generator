@@ -9,6 +9,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.user.client.Timer;
 import com.vaadin.polymer.elemental.Function;
 import com.vaadin.polymer.elemental.HTMLElement;
 
@@ -21,23 +22,21 @@ public abstract class DomModule {
 	}
 
 	protected void create(String tagName) {
-		saveInitData(tagName);
-		this.domModuleElement = (HTMLElement) Document.get().createElement(tagName);
-		clearInitData(tagName);
+        create(tagName, true);
+    }
+
+	protected void create(String tagName, boolean createNow) {
+		saveObjectReference(tagName);
+	    this.domModuleElement = (createNow) ? 
+            (HTMLElement) Document.get().createElement(tagName) : null;
 	}
 
-	protected native void saveInitData(String tagName) /*-{
+	protected native void saveObjectReference(String tagName) /*-{
 		if (!$wnd.customDomModules) {
 			$wnd.customDomModules = {};
 		}
 
 		$wnd.customDomModules[tagName] = this;
-	}-*/;
-
-	protected native void clearInitData(String tagName) /*-{
-		if ($wnd.customDomModules) {
-			delete $wnd.customDomModules[tagName];
-		}
 	}-*/;
 
 	protected HTMLElement $(String id) {
@@ -49,7 +48,7 @@ public abstract class DomModule {
 	}-*/; 
 
 	@JsMethod
-	native void domModuleCreated(HTMLElement e) /*-{
+	native void domModuleCreated(HTMLElement e, String tagName) /*-{
 		var gwtObject = this;
 
 		var makeSafe = function(fn) {
@@ -64,10 +63,19 @@ public abstract class DomModule {
 				e[key.substr(1)] = makeSafe(gwtObject[key]);
 			}
 		});
+
+		if ($wnd.customDomModules) {
+			delete $wnd.customDomModules[tagName];
+		}
 	}-*/;
 
     @JsMethod
-    void ready() {
+    void ready(HTMLElement element) {
+        // elements created as "shadow" i.e. used in another component need init here
+        if (this.domModuleElement == null) {
+		    this.domModuleElement = element;
+        }
+
         domModuleReady();
     }
 
@@ -78,18 +86,22 @@ public abstract class DomModule {
 		return domModuleElement;
 	}
 
-    public Object async(Runnable runnable, int delayMillis) {
-        return domModuleElement.async(new Function() {
-            @Override
-            public Object call(Object o) {
+    public Timer async(Runnable runnable, int delayMillis) {
+        Timer t = new Timer() {
+            public void run() {
                 runnable.run();
-                return null;
             }
-        }, delayMillis);
+        };
+
+        t.schedule(delayMillis);
+
+        return t;
     }
 
-    public void cancelAsync(Object handle) {
-        domModuleElement.cancelAsync(handle);
+    public void cancelAsync(Timer timer) {
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 
 	public void setHidden(Boolean hidden) {
@@ -103,14 +115,15 @@ public abstract class DomModule {
 	private static native void init(String moduleBaseURL, String importsFile) /*-{
       (function() {
           if ('registerElement' in $doc
-              && 'import' in $doc.createElement('link')
-              && 'content' in $doc.createElement('template')) {
-            // platform is good!
+             && 'HTMLImports' in $wnd
+             && 'import' in $doc.createElement('link')
+             && 'content' in $doc.createElement('template')) {
+             // platform is good!
           } else {
-            // polyfill the platform!
-            var e = $doc.createElement('script');
-            e.src = moduleBaseURL + 'bower_components/webcomponentsjs/webcomponents-lite.min.js';
-            $doc.body.appendChild(e);
+             // polyfill the platform!
+             var e = $doc.createElement('script');
+             e.src = moduleBaseURL + 'bower_components/webcomponentsjs/webcomponents-lite.js';
+             $doc.body.appendChild(e);
           }
           
           if (importsFile) {

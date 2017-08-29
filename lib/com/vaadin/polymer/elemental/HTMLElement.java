@@ -36,7 +36,7 @@ public class HTMLElement extends Element {
     /**
      * Returns the first node in this element’s local DOM that matches selector.
      */
-    public final native Element $$(String selector) /*-{ return this.$$(selector); }-*/;
+    public final native Element $$(String selector) /*-{ return this.shadowRoot.querySelector(selector); }-*/;
 
     /**
      * Toggles the named boolean class on the node, adding the class if bool is
@@ -69,18 +69,6 @@ public class HTMLElement extends Element {
      *    cancelable: Whether the event can be canceled with preventDefault. Defaults to false.
      */
     public final native void fire(String type, Object detail, Object options) /*-{ fire(type, detail, options); }-*/;
-
-    /**
-     * Calls method asynchronously. If no wait time is specified, runs tasks with microtask
-     * timing (after the current method finishes, but before the next event from the event
-     * queue is processed). Returns a handle that can be used to cancel the task.
-     */
-    public final native Object async(Function method, int wait) /*-{ return this.async(method, wait); }-*/;
-
-    /**
-     * Cancels the identified async task.
-     */
-    public final native void cancelAsync(Object handle) /*-{ this.cancelAsync(handle); }-*/;
 
     /**
      *  Applies a CSS transform to the specified node, or host element if no node is
