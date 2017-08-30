@@ -36,7 +36,7 @@ public class HTMLElement extends Element {
     /**
      * Returns the first node in this element’s local DOM that matches selector.
      */
-    public final native Element $$(String selector) /*-{ return this.shadowRoot.querySelector(selector); }-*/;
+    public final native HTMLElement $$(String selector) /*-{ return this.shadowRoot.querySelector(selector); }-*/;
 
     /**
      * Toggles the named boolean class on the node, adding the class if bool is

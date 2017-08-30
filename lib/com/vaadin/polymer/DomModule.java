@@ -17,27 +17,23 @@ import jsinterop.annotations.JsMethod;
 
 public abstract class DomModule {
 	protected HTMLElement domModuleElement;
+    protected String tagName;
 
 	public DomModule() {
 	}
 
+    public native void shadowModule(String tagName) /*-{
+      $wnd.shadowDomModule[tagName + '-'] = this;
+    }-*/;
+
+    public native void shadowModule(String tagName, String id) /*-{
+      $wnd.shadowDomModule[tagName + '-' + id] = this;
+    }-*/;
+
 	protected void create(String tagName) {
-        create(tagName, true);
-    }
-
-	protected void create(String tagName, boolean createNow) {
-		saveObjectReference(tagName);
-	    this.domModuleElement = (createNow) ? 
-            (HTMLElement) Document.get().createElement(tagName) : null;
+	    domModuleElement = (HTMLElement) Document.get().createElement(tagName);
+        attachGwtToElement(domModuleElement);
 	}
-
-	protected native void saveObjectReference(String tagName) /*-{
-		if (!$wnd.customDomModules) {
-			$wnd.customDomModules = {};
-		}
-
-		$wnd.customDomModules[tagName] = this;
-	}-*/;
 
 	protected HTMLElement $(String id) {
 		return $(domModuleElement, id);
@@ -48,7 +44,7 @@ public abstract class DomModule {
 	}-*/; 
 
 	@JsMethod
-	native void domModuleCreated(HTMLElement e, String tagName) /*-{
+	public native void attachGwtToElement(HTMLElement e) /*-{
 		var gwtObject = this;
 
 		var makeSafe = function(fn) {
@@ -64,16 +60,14 @@ public abstract class DomModule {
 			}
 		});
 
-		if ($wnd.customDomModules) {
-			delete $wnd.customDomModules[tagName];
-		}
+        e.gwtObject = this;
 	}-*/;
 
     @JsMethod
-    void ready(HTMLElement element) {
-        // elements created as "shadow" i.e. used in another component need init here
-        if (this.domModuleElement == null) {
-		    this.domModuleElement = element;
+    void ready(HTMLElement e) {
+        // shadow modules need to init domModuleElement
+        if (domModuleElement == null) {
+            domModuleElement = e;
         }
 
         domModuleReady();
@@ -133,6 +127,8 @@ public abstract class DomModule {
               $doc.head.appendChild(l);
           }
         })();
+
+        $wnd.shadowDomModule = {};
     }-*/;
 	   
 	/**
