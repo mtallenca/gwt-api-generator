@@ -14,6 +14,7 @@ public class HTMLElement extends Element {
      * such as application of CSS classes, etc., call updateStyles().
      */
     public final native void updateStyles() /*-{ this.updateStyles(); }-*/;
+    public final native HTMLElement getShadowRoot() /*-{ return this.shadowRoot; }-*/;
     public final native void setGwtObject(Object value) /*-{ this.gwtObject = value; }-*/;
     public final native Object getGwtObject() /*-{ return this.gwtObject; }-*/;
     public final native void setHidden(boolean value) /*-{ this.hidden = value; }-*/;

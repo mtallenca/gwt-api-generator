@@ -7,6 +7,12 @@ import jsinterop.annotations.JsType;
 @JsType(isNative=true, namespace=GLOBAL)
 public interface WheelEvent extends Event {
     @JsProperty
+    int getClientX();
+
+    @JsProperty
+    int getClientY();
+
+    @JsProperty
     int getDeltaX();
 
     @JsProperty
@@ -14,4 +20,8 @@ public interface WheelEvent extends Event {
 
     @JsProperty
     int getDeltaMode();
+
+    // detail is used by firefox for DOMMouseWheel events
+    @JsProperty
+    int getDetail();
 }
