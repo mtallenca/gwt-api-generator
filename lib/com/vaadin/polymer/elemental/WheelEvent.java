@@ -20,8 +20,4 @@ public interface WheelEvent extends Event {
 
     @JsProperty
     int getDeltaMode();
-
-    // detail is used by firefox for DOMMouseWheel events
-    @JsProperty
-    int getDetail();
 }
