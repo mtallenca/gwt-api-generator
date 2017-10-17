@@ -117,7 +117,7 @@ public abstract class DomModule {
              // polyfill the platform!
              var e = $doc.createElement('script');
              e.src = moduleBaseURL + 'bower_components/webcomponentsjs/webcomponents-lite.js';
-             $doc.body.appendChild(e);
+             $doc.head.appendChild(e);
           }
           
           if (importsFile) {

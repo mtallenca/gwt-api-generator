@@ -5,7 +5,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class Model extends JavaScriptObject {
    protected Model() {}     
    
-   public final native Model getParentModel() /*-{ return this.dataHost.dataHost; }-*/;
+   public final native Model getParentModel() /*-{ return this.parentModel; }-*/;
    public final native int getIndex() /*-{ return this.index; }-*/;
    public final native Object get(String propertyPath) /*-{ return this.get(propertyPath); }-*/;
    public final native <T extends JavaScriptObject> T getAsJavaScriptObject(String propertyPath) /*-{ return this.get(propertyPath); }-*/;
