@@ -33,7 +33,6 @@ public interface Event {
         @JsProperty int getY();
         @JsProperty int getDx();
         @JsProperty int getDy();
-        @JsProperty int getDy();
         @JsProperty int getDdx();
         @JsProperty int getDdy();
     }
