@@ -27,8 +27,15 @@ public interface Event {
     
     @JsType(isNative=true)
     public interface Detail {
-        @JsProperty
-        String getValue();
+        @JsProperty String getValue();
+        @JsProperty String getState();
+        @JsProperty int getX();
+        @JsProperty int getY();
+        @JsProperty int getDx();
+        @JsProperty int getDy();
+        @JsProperty int getDy();
+        @JsProperty int getDdx();
+        @JsProperty int getDdy();
     }
 
     void stopPropagation();
