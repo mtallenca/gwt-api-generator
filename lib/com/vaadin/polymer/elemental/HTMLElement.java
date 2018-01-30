@@ -13,6 +13,7 @@ public class HTMLElement extends Element {
      * In order to have an element (and its subtree) re- evaluate custom property values due to dynamic changes
      * such as application of CSS classes, etc., call updateStyles().
      */
+    public final native void scrollIntoView() /*-{ this.scrollIntoView(); }-*/;
     public final native void updateStyles() /*-{ this.updateStyles(); }-*/;
     public final native HTMLElement getShadowRoot() /*-{ return this.shadowRoot; }-*/;
     public final native void setGwtObject(Object value) /*-{ this.gwtObject = value; }-*/;
