@@ -160,7 +160,17 @@ module.exports = {
         item.setters = []
         item.javaParams = []
         var types = item.type.split("|");
+        var cacheTypes = {};
+
         for (i = 0; i < types.length; i++) {
+            var cacheType = this.computeType(types[i]);
+            if (cacheTypes[cacheType]) {
+               // don't duplicated getter/setter
+               continue;
+            }
+
+            cacheTypes[cacheType] = true;
+
             setter = this.computeSetterWithPrefix(item) + '(' + this.computeType(types[i]) + ' value)';
 
             if (i > 0) {

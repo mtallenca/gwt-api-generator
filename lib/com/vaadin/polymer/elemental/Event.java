@@ -23,6 +23,9 @@ public interface Event {
     HTMLElement getTarget();
 
     @JsProperty
+    double getTimeStamp();
+
+    @JsProperty
     HTMLElement getCurrentTarget();
     
     @JsType(isNative=true)
